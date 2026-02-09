@@ -1,3 +1,7 @@
+<!-- Source: $RCLONE_REPO_DIR/docs/content/filtering.md (entire file, condensed) -->
+<!-- rclone version: v1.72.1 -->
+<!-- To update: ./scripts/update-references.sh $RCLONE_REPO_DIR -->
+
 # rclone Filtering Reference
 
 ## Table of Contents

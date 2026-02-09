@@ -1,3 +1,7 @@
+<!-- Source: $RCLONE_REPO_DIR/docs/content/drive.md (sections: Shared drives, Backend commands) -->
+<!-- rclone version: v1.72.1 -->
+<!-- To update: ./scripts/update-references.sh $RCLONE_REPO_DIR -->
+
 # Shared Drives (Team Drives) Reference
 
 ## Table of Contents

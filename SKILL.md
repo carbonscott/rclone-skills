@@ -21,6 +21,23 @@ rclone size REMOTE:path/             # total size and file count
 rclone about REMOTE:                 # quota usage info
 ```
 
+### Searching (server-side, fast)
+
+Use `backend query` to search Google Drive server-side — much faster than `lsf --recursive | grep` which lists all files client-side before filtering.
+
+```bash
+rclone backend query REMOTE: "name contains 'keyword'"                    # search by name
+rclone backend query REMOTE: "modifiedTime > '2025-01-01'"               # by date
+rclone backend query REMOTE: "name contains 'report' and mimeType contains 'presentation'"  # combined
+
+# Search a shared drive
+rclone backend query "REMOTE,team_drive=DRIVE_ID:" "name contains 'keyword'"
+```
+
+Returns JSON with file ID, name, size, dates, and webViewLink. See [Google Drive search syntax](https://developers.google.com/drive/api/guides/ref-search-terms) for all query operators.
+
+For multiple searches on the same drive, either run multiple `backend query` calls or cache a full listing locally (`rclone lsf --recursive --fast-list > /tmp/listing.txt`) and grep that file.
+
 ### Copying and syncing
 
 ```bash
@@ -105,6 +122,7 @@ For filtering syntax (`--include`, `--exclude`, `--filter-from`, etc.), see [ref
 - **Duplicates**: Google Drive can create duplicate files. Use `rclone dedupe` to fix. If files keep re-copying, run dedupe first.
 - **Shortcuts**: By default treated as the target file. Use `--drive-skip-shortcuts` to ignore them. Shortcuts pointing to parent folders can cause infinite recursion.
 - **Trash**: Deletes go to trash by default. Use `--drive-use-trash=false` for permanent deletion. `rclone cleanup` empties trash (may take minutes to days on Google's side).
+- **Searching**: Prefer `rclone backend query` for file search — it uses Google's server-side API and is dramatically faster than `rclone lsf --recursive | grep` which lists all files client-side before filtering. For multiple searches on the same drive, either use multiple `backend query` calls or cache a full listing locally.
 - **Rate limiting**: Drive limits to ~2 files/sec for small files. Large files transfer at full speed. Use `--fast-list` for faster directory listings.
 - **"Computers" tab**: Folders under this tab are read-only (500 error).
 - **HTTP/2 disabled**: HTTP/2 is disabled by default for Drive due to an unresolved issue.
